@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
         String fullPath=imagePath+product.getProductImage();
         Path path = Paths.get(fullPath);
 
-        try {
+        try {               
             
             Files.delete(path);
         } catch (Exception e) {
