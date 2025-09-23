@@ -24,8 +24,10 @@ import com.electronic.store.dtos.ApiResponseMessage;
 import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.ImageResponse;
 import com.electronic.store.dtos.PageableResponse;
+import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.services.CategoryService;
 import com.electronic.store.services.FileService;
+import com.electronic.store.services.ProductService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -40,6 +42,10 @@ public class CategoryController {
 
     @Autowired
     private FileService fileService;
+
+
+    @Autowired
+    private ProductService productService;
 
     @Value("${category.profile.image.path}")
     private String imageUpaloadPath;
@@ -121,5 +127,14 @@ public class CategoryController {
         StreamUtils.copy(resource, response.getOutputStream());
     }
 
+
+    // create product with category
+
+    @PostMapping("/{categoryId}/products")
+    public ResponseEntity<ProductDto> createProductWithCategory(@RequestBody ProductDto productDto,@PathVariable String categoryId){
+
+        ProductDto productWithCategory = productService.createProductWithCategory(productDto,categoryId);
+        return new ResponseEntity<>(productWithCategory,HttpStatus.CREATED);
+    }
 
 }

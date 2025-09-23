@@ -1,10 +1,9 @@
 package com.electronic.store.services.impl;
 
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -22,6 +21,7 @@ import com.electronic.store.entity.Category;
 import com.electronic.store.entity.Product;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.Helper;
+import com.electronic.store.repository.CategoryRepository;
 import com.electronic.store.repository.ProductRepository;
 import com.electronic.store.services.ProductService;
 
@@ -33,6 +33,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Value("${product.image.path}")
     private String imagePath;
@@ -101,11 +104,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with give id !!"));
         // delete product image
-        String fullPath=imagePath+product.getProductImage();
+        String fullPath = imagePath + product.getProductImage();
         Path path = Paths.get(fullPath);
 
-        try {               
-            
+        try {
+
             Files.delete(path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,6 +139,25 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> page = productRepository.findByTitleContaining(subTitle, pageable);
 
         return Helper.getPageableResponse(page, ProductDto.class);
+    }
+
+    @Override
+    public ProductDto createProductWithCategory(ProductDto productDto, String categoryId) {
+
+        // fetch the category
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with given id !!"));
+
+        Product product = mapper.map(productDto, Product.class);
+
+        String productId = UUID.randomUUID().toString();
+        product.setProductId(productId);
+        product.setCategory(category);
+
+        product.setAddedDate(new Date());
+        Product saveProduct = productRepository.save(product);
+
+        return mapper.map(saveProduct, ProductDto.class);
     }
 
 }

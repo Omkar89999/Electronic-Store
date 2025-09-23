@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.electronic.store.dtos.ApiResponseMessage;
 
 @RestControllerAdvice
-public class GlobleExceptionHandler {
+public class GlobalExceptionHandler {
 
 	// handler resource not found exception
 
-	private Logger logger = LoggerFactory.getLogger(GlobleExceptionHandler.class);
+	private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ApiResponseMessage> resourceNotFoundExceptionHandler(ResourceNotFoundException ex) {
