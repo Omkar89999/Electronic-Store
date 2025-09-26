@@ -1,6 +1,5 @@
 package com.electronic.store.dtos;
 
-import com.electronic.store.entity.Cart;
 import com.electronic.store.entity.Product;
 
 import lombok.AllArgsConstructor;
@@ -13,14 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemDto {
-    
+
     private String cartItemId;
 
-  
     private Product product;
 
-   
-    private Cart cart;
+    // private Cart cart;
 
     private int quantity;
 
