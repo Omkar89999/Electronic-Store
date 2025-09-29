@@ -50,7 +50,7 @@ public class CartServiceImpl implements CartService {
                     cart = cartRepository.findByUser(user).get();
 
                 } catch (NoSuchElementException e) {
-                  
+                  cart=new Cart();
                 }
         return null;
     }
