@@ -1,5 +1,7 @@
 package com.electronic.store.services.impl;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.electronic.store.dtos.AddItemToCartRequest;
 import com.electronic.store.dtos.CartDto;
 import com.electronic.store.entity.Cart;
+import com.electronic.store.entity.CartItem;
 import com.electronic.store.entity.Product;
 import com.electronic.store.entity.User;
 import com.electronic.store.repository.CartRepository;
@@ -44,14 +47,22 @@ public class CartServiceImpl implements CartService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with given id !!"));
 
-                Cart cart = null;
+        Cart cart = null;
 
-                try {
-                    cart = cartRepository.findByUser(user).get();
+        try {
+            cart = cartRepository.findByUser(user).get();
 
-                } catch (NoSuchElementException e) {
-                  cart=new Cart();
-                }
+        } catch (NoSuchElementException e) {
+            cart = new Cart();
+            cart.setCreatedAt(new Date(System.currentTimeMillis()));
+        }
+
+        // perform cart operations
+
+        List<CartItem> items = cart.getItems();
+        // create a new cart item
+        CartItem.builder().quantity(quantity).product(product).build();
+
         return null;
     }
 
@@ -66,3 +77,6 @@ public class CartServiceImpl implements CartService {
     }
 
 }
+
+
+
